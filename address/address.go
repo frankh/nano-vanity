@@ -124,6 +124,9 @@ func GenerateVanityAddress(prefix string) (string, string, error) {
 	seed := <-c
 	pub, _ := KeypairFromSeed(seed, 0)
 	address := PubKeyToAddress(pub)
+	if !ValidateAddress(address) {
+		return "", "", fmt.Errorf("Address generated had an invalid checksum! Please create an issue on github.")
+	}
 
 	close(c)
 	close(progress)
@@ -153,6 +156,12 @@ func PubKeyToAddress(pub ed25519.PublicKey) string {
 }
 
 func KeypairFromSeed(seed string, index uint32) (ed25519.PublicKey, ed25519.PrivateKey) {
+	// This seems to be the standard way of producing wallets.
+
+	// We hash together the seed with an address index and use
+	// that as the private key. Whenever you "add" an address
+	// to your wallet the wallet software increases the index
+	// and generates a new address.
 	hash, err := blake2b.New(32, nil)
 	if err != nil {
 		panic("Unable to create hash")
