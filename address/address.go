@@ -9,7 +9,9 @@ import (
 	"github.com/golang/crypto/blake2b"
 	// We've forked golang's ed25519 implementation
 	// to use blake2b instead of sha3
+	"fmt"
 	"github.com/frankh/crypto/ed25519"
+	"math"
 	"runtime"
 	"strings"
 )
@@ -54,12 +56,39 @@ func ValidateAddress(address string) bool {
 	return false
 }
 
-func GenerateVanityAddress(prefix string) (string, string) {
-	c := make(chan string, 1000000)
+func IsValidPrefix(prefix string) bool {
+	for _, c := range prefix {
+		if !strings.Contains(encodeXrb, string(c)) {
+			return false
+		}
+	}
+	return true
+}
+
+func EstimatedIterations(prefix string) int {
+	return int(math.Pow(32, float64(len(prefix))) / 2)
+}
+
+func GenerateVanityAddress(prefix string) (string, string, error) {
+	if !IsValidPrefix(prefix) {
+		return "", "", fmt.Errorf("Invalid character in prefix.")
+	}
+
+	c := make(chan string, 100)
+	progress := make(chan int, 100)
 
 	for i := 0; i < runtime.NumCPU(); i++ {
-		go func(c chan string) {
+		go func(c chan string, progress chan int) {
+			defer func() {
+				recover()
+			}()
+			count := 0
 			for {
+				count += 1
+				if count%(500+i) == 0 {
+					progress <- count
+					count = 0
+				}
 				seed_bytes := make([]byte, 32)
 				rand.Read(seed_bytes)
 				seed := hex.EncodeToString(seed_bytes)
@@ -76,14 +105,30 @@ func GenerateVanityAddress(prefix string) (string, string) {
 					break
 				}
 			}
-		}(c)
+		}(c, progress)
 	}
+
+	go func(progress chan int) {
+		total := 0
+		fmt.Println()
+		for {
+			count, ok := <-progress
+			if !ok {
+				break
+			}
+			total += count
+			fmt.Printf("\033[1A\033[KTried %d (~%.2f%%)\n", total, float64(total)/float64(EstimatedIterations(prefix))*100)
+		}
+	}(progress)
 
 	seed := <-c
 	pub, _ := KeypairFromSeed(seed, 0)
 	address := PubKeyToAddress(pub)
 
-	return seed, address
+	close(c)
+	close(progress)
+
+	return seed, address, nil
 }
 
 func GetAddressChecksum(pub ed25519.PublicKey) []byte {

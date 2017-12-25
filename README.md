@@ -11,4 +11,4 @@ The easiest way to use it is with Docker.
 Donations
 =========
 
-If you enjoyed this software feel free to donate from Rai to xrb_3frankpbyhk7bz6ecrg9w3tx9z5mprubf1qkyo8m7qbwbyjczhen85b9ufwr
+If you enjoyed this software feel free to donate some Rai to xrb_3frank8kfb5e9p4cipm59u4k35qjecuh6dgn95kjcw7dgx5wm6gc7nezkgra
