@@ -173,7 +173,7 @@ func KeypairFromSeed(seed string, index uint32) (ed25519.PublicKey, ed25519.Priv
 	}
 
 	bs := make([]byte, 4)
-	binary.LittleEndian.PutUint32(bs, index)
+	binary.BigEndian.PutUint32(bs, index)
 
 	hash.Write(seed_data)
 	hash.Write(bs)

@@ -33,6 +33,26 @@ func TestValidateAddress(t *testing.T) {
 
 }
 
+func TestKeypairFromSeed(t *testing.T) {
+	seed := "1234567890123456789012345678901234567890123456789012345678901234"
+
+	// Generated from the official RaiBlocks wallet using above seed.
+	expected := map[uint32]string{
+		0: "xrb_3iwi45me3cgo9aza9wx5f7rder37hw11xtc1ek8psqxw5oxb8cujjad6qp9y",
+		1: "xrb_3a9d1h6wt3zp8cqd6dhhgoyizmk1ciemqkrw97ysrphn7anm6xko1wxakaa1",
+		2: "xrb_1dz36wby1azyjgh7t9nopjm3k5rduhmntercoz545my9s8nm7gcuthuq9fmq",
+		3: "xrb_1fb7kaqaue49kf9w4mb9w3scuxipbdm3ez6ibnri4w8qexzg5f4r7on1dmxb",
+		4: "xrb_3h9a64yqueuij1j9odt119r3ymm8n83wyyz7o9u7ram1tgfhsh1zqwjtzid9",
+	}
+
+	for i := uint32(0); i < uint32(len(expected)); i++ {
+		pub, _ := KeypairFromSeed(seed, i)
+		if PubKeyToAddress(pub) != expected[i] {
+			t.Errorf("Wallet generation from seed created the wrong address")
+		}
+	}
+}
+
 func BenchmarkGenerateAddress(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		pub, _ := GenerateKey()
