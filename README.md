@@ -6,7 +6,7 @@ A basic vanity address generator for RaiBlocks.
 What is a vanity address?
 -------------------------
 
-A vanity address is an address that contains a word in it, e.g. xrb_3frank8kfb5e9p4cipm59u4k35qjecuh6dgn95kjcw7dgx5wm6gc7nezkgra.
+A vanity address is an address that contains a word in it, e.g. xrb_1frankh36p3e4cy4xrtj79d5rmcgce9wh4zke366gik19gifb5kxcnoju3y5.
 
 This makes addresses easier to remember and makes requesting money from people easier as people can be more confident they have the correct address.
 
@@ -37,4 +37,4 @@ The easiest way to use it is with Docker.
 Donations
 =========
 
-If you enjoyed this software feel free to donate some Rai to xrb_3frank8kfb5e9p4cipm59u4k35qjecuh6dgn95kjcw7dgx5wm6gc7nezkgra
+If you enjoyed this software feel free to donate some Rai to xrb_1frankh36p3e4cy4xrtj79d5rmcgce9wh4zke366gik19gifb5kxcnoju3y5
