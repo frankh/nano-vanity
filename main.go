@@ -1,10 +1,15 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
+	"github.com/frankh/rai"
 	"github.com/frankh/rai/address"
 	"github.com/urfave/cli"
+	"math"
 	"os"
+	"runtime"
 	"strings"
 )
 
@@ -25,9 +30,9 @@ func main() {
 		},
 	}
 	app.Action = func(c *cli.Context) {
-		fmt.Println("Estimated number of iterations needed:", address.EstimatedIterations(c.String("prefix")))
+		fmt.Println("Estimated number of iterations needed:", EstimatedIterations(c.String("prefix")))
 		for i := 0; i < c.Int("count") || c.Int("count") == 0; i++ {
-			seed, addr, err := address.GenerateVanityAddress(c.String("prefix"))
+			seed, addr, err := GenerateVanityAddress(c.String("prefix"))
 			if err != nil {
 				fmt.Println("Error:", err)
 				os.Exit(1)
@@ -40,4 +45,82 @@ Address: %s
 		}
 	}
 	app.Run(os.Args)
+}
+
+func EstimatedIterations(prefix string) int {
+	return int(math.Pow(32, float64(len(prefix))) / 2)
+}
+
+func IsValidPrefix(prefix string) bool {
+	for _, c := range prefix {
+		if !strings.Contains(address.EncodeXrb, string(c)) {
+			return false
+		}
+	}
+	return true
+}
+
+func GenerateVanityAddress(prefix string) (string, rai.Account, error) {
+	if !IsValidPrefix(prefix) {
+		return "", "", fmt.Errorf("Invalid character in prefix.")
+	}
+
+	c := make(chan string, 100)
+	progress := make(chan int, 100)
+
+	for i := 0; i < runtime.NumCPU(); i++ {
+		go func(c chan string, progress chan int) {
+			defer func() {
+				recover()
+			}()
+			count := 0
+			for {
+				count += 1
+				if count%(500+i) == 0 {
+					progress <- count
+					count = 0
+				}
+				seed_bytes := make([]byte, 32)
+				rand.Read(seed_bytes)
+				seed := hex.EncodeToString(seed_bytes)
+				pub, _ := address.KeypairFromSeed(seed, 0)
+				address := string(address.PubKeyToAddress(pub))
+
+				if address[4] != '1' && address[4] != '3' {
+					c <- seed
+					break
+				}
+
+				if strings.HasPrefix(address[5:], prefix) {
+					c <- seed
+					break
+				}
+			}
+		}(c, progress)
+	}
+
+	go func(progress chan int) {
+		total := 0
+		fmt.Println()
+		for {
+			count, ok := <-progress
+			if !ok {
+				break
+			}
+			total += count
+			fmt.Printf("\033[1A\033[KTried %d (~%.2f%%)\n", total, float64(total)/float64(EstimatedIterations(prefix))*100)
+		}
+	}(progress)
+
+	seed := <-c
+	pub, _ := address.KeypairFromSeed(seed, 0)
+	account := address.PubKeyToAddress(pub)
+	if !address.ValidateAddress(account) {
+		return "", "", fmt.Errorf("Address generated had an invalid checksum! Please create an issue on github.")
+	}
+
+	close(c)
+	close(progress)
+
+	return seed, account, nil
 }
