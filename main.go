@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/frankh/rai-vanity/address"
+	"github.com/frankh/rai/address"
 	"github.com/urfave/cli"
 	"os"
 	"strings"
