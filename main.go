@@ -14,6 +14,10 @@ import (
 	"github.com/urfave/cli"
 )
 
+var (
+	iterations float64
+)
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "RaiBlocks Vanity Generator"
@@ -31,7 +35,10 @@ func main() {
 		},
 	}
 	app.Action = func(c *cli.Context) {
-		fmt.Println("Estimated number of iterations needed:", estimatedIterations(c.String("prefix")))
+
+		iterations = estimatedIterations(c.String("prefix"))
+
+		fmt.Println("Estimated number of iterations needed:", int(iterations))
 		for i := 0; i < c.Int("count") || c.Int("count") == 0; i++ {
 			seed, addr, err := generateVanityAddress(c.String("prefix"))
 			if err != nil {
@@ -48,8 +55,8 @@ Address: %s
 	app.Run(os.Args)
 }
 
-func estimatedIterations(prefix string) int {
-	return int(math.Pow(32, float64(len(prefix))) / 2)
+func estimatedIterations(prefix string) float64 {
+	return math.Pow(32, float64(len(prefix))) / 2
 }
 
 func isValidPrefix(prefix string) bool {
@@ -109,7 +116,7 @@ func generateVanityAddress(prefix string) (string, rai.Account, error) {
 				break
 			}
 			total += count
-			fmt.Printf("\033[1A\033[KTried %d (~%.2f%%)\n", total, float64(total)/float64(estimatedIterations(prefix))*100)
+			fmt.Printf("\033[1A\033[KTried %d (~%.2f%%)\n", total, float64(total)/iterations*100)
 		}
 	}(progress)
 
