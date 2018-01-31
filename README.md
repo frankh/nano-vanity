@@ -1,7 +1,7 @@
-RaiBlocks Vanity Generator
-==========================
+Nano Vanity Generator
+=====================
 
-A basic vanity address generator for RaiBlocks.
+A basic vanity address generator for the Nano cryptocurrency.
 
 What is a vanity address?
 -------------------------
@@ -32,7 +32,7 @@ Usage
 
 The easiest way to use it is with Docker.
 
-```$ docker run --rm frankh/rai-vanity --prefix="rai" --count=1```
+```$ docker run --rm frankh/nano-vanity --prefix="nano" --count=1```
 
 Donations
 =========

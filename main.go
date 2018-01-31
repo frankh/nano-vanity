@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/frankh/rai"
-	"github.com/frankh/rai/address"
+	"github.com/frankh/nano"
+	"github.com/frankh/nano/address"
 	"github.com/urfave/cli"
 )
 
@@ -20,7 +20,7 @@ var (
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "RaiBlocks Vanity Generator"
+	app.Name = "Nano Vanity Generator"
 	app.Usage = "Generate wallet seeds with desirable public addresses"
 	app.Version = "0.0.1"
 	app.Flags = []cli.Flag{
@@ -68,7 +68,7 @@ func isValidPrefix(prefix string) bool {
 	return true
 }
 
-func generateVanityAddress(prefix string) (string, rai.Account, error) {
+func generateVanityAddress(prefix string) (string, nano.Account, error) {
 	if !isValidPrefix(prefix) {
 		return "", "", fmt.Errorf("Invalid character in prefix")
 	}
