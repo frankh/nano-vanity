@@ -33,14 +33,19 @@ func main() {
 			Value: 1,
 			Usage: "Number of valid addresses to generate before exiting, or 0 for infinite (default=1).",
 		},
+		cli.BoolFlag{
+			Name:  "quiet, q",
+			Usage: "Do not output progress message.",
+		},
 	}
 	app.Action = func(c *cli.Context) {
 
 		iterations = estimatedIterations(c.String("prefix"))
+		quiet := c.Bool("quiet")
 
 		fmt.Println("Estimated number of iterations needed:", int(iterations))
 		for i := 0; i < c.Int("count") || c.Int("count") == 0; i++ {
-			seed, addr, err := generateVanityAddress(c.String("prefix"))
+			seed, addr, err := generateVanityAddress(c.String("prefix"), quiet)
 			if err != nil {
 				fmt.Println("Error:", err)
 				os.Exit(1)
@@ -68,7 +73,7 @@ func isValidPrefix(prefix string) bool {
 	return true
 }
 
-func generateVanityAddress(prefix string) (string, nano.Account, error) {
+func generateVanityAddress(prefix string, quiet bool) (string, nano.Account, error) {
 	if !isValidPrefix(prefix) {
 		return "", "", fmt.Errorf("Invalid character in prefix")
 	}
@@ -116,7 +121,9 @@ func generateVanityAddress(prefix string) (string, nano.Account, error) {
 				break
 			}
 			total += count
-			fmt.Printf("\033[1A\033[KTried %d (~%.2f%%)\n", total, float64(total)/iterations*100)
+			if !quiet {
+				fmt.Printf("\033[1A\033[KTried %d (~%.2f%%)\n", total, float64(total)/iterations*100)
+			}
 		}
 	}(progress)
 
