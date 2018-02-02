@@ -34,6 +34,11 @@ The easiest way to use it is with Docker.
 
 ```$ docker run --rm frankh/nano-vanity --prefix="nano" --count=1```
 
+Dump the information to a file.
+
+```$ docker run --rm frankh/nano-vanity --prefix="nano" --count=1 -q > nano-results.txt```
+
+
 Donations
 =========
 
