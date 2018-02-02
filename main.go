@@ -43,7 +43,9 @@ func main() {
 		iterations = estimatedIterations(c.String("prefix"))
 		quiet := c.Bool("quiet")
 
-		fmt.Println("Estimated number of iterations needed:", int(iterations))
+		if !quiet {
+			fmt.Println("Estimated number of iterations needed:", int(iterations))
+		}
 		for i := 0; i < c.Int("count") || c.Int("count") == 0; i++ {
 			seed, addr, err := generateVanityAddress(c.String("prefix"), quiet)
 			if err != nil {
