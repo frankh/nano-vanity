@@ -19,13 +19,13 @@
     "address",
     "utils"
   ]
-  revision = "c47abfb0be77e8312b448b0f94e52652b9299e34"
+  revision = "364959b458c98615b131881139a71f1c40767f97"
 
 [[projects]]
   branch = "master"
   name = "github.com/golang/crypto"
   packages = ["blake2b"]
-  revision = "1875d0a70c90e57f11972aefd42276df65e895b9"
+  revision = "5119cf507ed5294cc409c092980c7497ee5d6fd2"
 
 [[projects]]
   name = "github.com/urfave/cli"

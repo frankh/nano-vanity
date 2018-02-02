@@ -1,2 +1,4 @@
 ./nano-vanity
-vendor
+.DS_Store
+
+vendor/
