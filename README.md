@@ -6,7 +6,10 @@ A basic vanity address generator for the Nano cryptocurrency.
 What is a vanity address?
 -------------------------
 
-A vanity address is an address that contains a word in it, e.g. xrb_1frankh36p3e4cy4xrtj79d5rmcgce9wh4zke366gik19gifb5kxcnoju3y5.
+A vanity address is an address that contains a word in it, e.g:
+```
+xrb_1frankh36p3e4cy4xrtj79d5rmcgce9wh4zke366gik19gifb5kxcnoju3y5
+```
 
 This makes addresses easier to remember and makes requesting money from people easier as people can be more confident they have the correct address.
 
@@ -32,11 +35,15 @@ Usage
 
 The easiest way to use it is with Docker.
 
-```$ docker run --rm frankh/nano-vanity --prefix="nano" --count=1```
+```
+$ docker run --rm frankh/nano-vanity --prefix="nano" --count=1
+```
 
 Dump the information to a file.
 
-```$ docker run --rm frankh/nano-vanity --prefix="nano" --count=1 -q > nano-results.txt```
+```
+$ docker run --rm frankh/nano-vanity --prefix="nano" --count=1 -q > nano-results.txt
+```
 
 
 Donations
