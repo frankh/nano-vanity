@@ -96,7 +96,11 @@ func generateVanityAddress(prefix string, quiet bool) (string, nano.Account, err
 					count = 0
 				}
 				seedBytes := make([]byte, 32)
-				rand.Read(seedBytes)
+				_, err := rand.Read(seedBytes)
+				if err != nil {
+					panic("Failed to generate random seed")
+				}
+
 				seed := hex.EncodeToString(seedBytes)
 				pub, _ := address.KeypairFromSeed(seed, 0)
 				address := string(address.PubKeyToAddress(pub))
