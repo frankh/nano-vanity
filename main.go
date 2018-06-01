@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/frankh/nano"
 	"github.com/frankh/nano/address"
+	"github.com/frankh/nano/types"
 	"github.com/urfave/cli"
 )
 
@@ -68,14 +68,14 @@ func estimatedIterations(prefix string) float64 {
 
 func isValidPrefix(prefix string) bool {
 	for _, c := range prefix {
-		if !strings.Contains(address.EncodeXrb, string(c)) {
+		if !strings.Contains(address.EncodeNano, string(c)) {
 			return false
 		}
 	}
 	return true
 }
 
-func generateVanityAddress(prefix string, quiet bool) (string, nano.Account, error) {
+func generateVanityAddress(prefix string, quiet bool) (string, types.Account, error) {
 	if !isValidPrefix(prefix) {
 		return "", "", fmt.Errorf("Invalid character in prefix")
 	}
@@ -105,12 +105,7 @@ func generateVanityAddress(prefix string, quiet bool) (string, nano.Account, err
 				pub, _ := address.KeypairFromSeed(seed, 0)
 				address := string(address.PubKeyToAddress(pub))
 
-				if address[4] != '1' && address[4] != '3' {
-					c <- seed
-					break
-				}
-
-				if strings.HasPrefix(address[5:], prefix) {
+				if strings.HasPrefix(address[6:], prefix) {
 					c <- seed
 					break
 				}

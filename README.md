@@ -8,7 +8,7 @@ What is a vanity address?
 
 A vanity address is an address that contains a word in it, e.g:
 ```
-xrb_1frankh36p3e4cy4xrtj79d5rmcgce9wh4zke366gik19gifb5kxcnoju3y5
+nano_1frankh36p3e4cy4xrtj79d5rmcgce9wh4zke366gik19gifb5kxcnoju3y5
 ```
 
 This makes addresses easier to remember and makes requesting money from people easier as people can be more confident they have the correct address.
