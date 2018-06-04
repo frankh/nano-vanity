@@ -1,4 +1,4 @@
-FROM golang:1.9 AS gobuild
+FROM golang:1.10 AS gobuild
 
 WORKDIR /go/src/github.com/frankh/nano-vanity
 RUN go get github.com/urfave/cli \
